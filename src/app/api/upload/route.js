@@ -1,4 +1,5 @@
 import { writeFile } from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
@@ -18,11 +19,17 @@ export async function POST(request) {
   const buffer = Buffer.from(arrayBuffer);
   const ext = file.name.split('.').pop();
   const filename = `${projectId}-${uuid()}.${ext}`;
-  const filePath = path.join(process.cwd(), 'public', 'uploads', filename);
+  
+  const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
 
+  // ✅ Ensure folder exists on Render
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  const filePath = path.join(uploadsDir, filename);
   await writeFile(filePath, buffer);
 
-  // ✅ Return full URL for use in overlays
   const imageUrl = `https://uxqa-backend.onrender.com/uploads/${filename}`;
 
   return new Response(
