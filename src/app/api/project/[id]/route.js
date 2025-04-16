@@ -24,7 +24,7 @@ export async function GET(request, { params }) {
 
   const matchingFiles = data.filter(file => file.name.startsWith(projectId + '-'));
   const frameUrls = matchingFiles.map(file =>
-    \`\${supabaseUrl}/storage/v1/object/public/uxqa-frames/\${file.name}\`
+    `${supabaseUrl}/storage/v1/object/public/uxqa-frames/${file.name}`
   );
 
   return new Response(

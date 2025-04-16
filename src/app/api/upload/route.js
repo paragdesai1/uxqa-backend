@@ -36,7 +36,7 @@ export async function POST(request) {
     });
   }
 
-  const publicUrl = \`\${supabaseUrl}/storage/v1/object/public/uxqa-frames/\${filename}\`;
+  const publicUrl = `${supabaseUrl}/storage/v1/object/public/uxqa-frames/${filename}`;
 
   return new Response(JSON.stringify({
     imageUrl: publicUrl,
