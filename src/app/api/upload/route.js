@@ -22,9 +22,12 @@ export async function POST(request) {
 
   await writeFile(filePath, buffer);
 
+  // ✅ Return full URL for use in overlays
+  const imageUrl = `https://uxqa-backend.onrender.com/uploads/${filename}`;
+
   return new Response(
     JSON.stringify({
-      imageUrl: `/uploads/${filename}`,
+      imageUrl,
       projectId
     }),
     {
