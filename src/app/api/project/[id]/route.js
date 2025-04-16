@@ -5,7 +5,7 @@ export async function GET(request, { params }) {
   const { id } = params;
   const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
-  // ✅ Create folder if it doesn't exist
+  // Create folder if it doesn't exist
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
@@ -13,17 +13,22 @@ export async function GET(request, { params }) {
   try {
     const files = fs.readdirSync(uploadDir);
     const matchingFiles = files.filter(file => file.startsWith(id + '-'));
-    const origin = request.headers.get('origin') || 'https://uxqa-backend.onrender.com';
-    const frameUrls = matchingFiles.map(file => `${origin}/uploads/${file}`);
+
+    // Use hardcoded base URL or request origin fallback
+    const baseURL = 'https://uxqa-backend.onrender.com'; // ✅ hardcoded to ensure full URLs work
+    const frameUrls = matchingFiles.map(file => `${baseURL}/uploads/${file}`);
 
     return new Response(
-      JSON.stringify({ projectId: id, frames: frameUrls }),
+      JSON.stringify({
+        projectId: id,
+        frames: frameUrls,
+      }),
       {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-        }
+        },
       }
     );
   } catch (error) {
@@ -34,7 +39,7 @@ export async function GET(request, { params }) {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-        }
+        },
       }
     );
   }
